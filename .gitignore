@@ -1,6 +1,5 @@
 dataset/
 processed/
-best_model.pth
 .idea/
 .venv/
 __pycache__/
