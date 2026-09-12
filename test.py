@@ -12,7 +12,7 @@ def dice_loss(predictions,masks):
     smooth = 1e-6
     sigmoid_predictions=torch.sigmoid(predictions)
     intersection=torch.sum(sigmoid_predictions*masks)
-    dice=(2*intersection)/sigmoid_predictions.sum()+masks.sum()+smooth
+    dice=(2*intersection)/(sigmoid_predictions.sum()+masks.sum()+smooth)
     return 1-dice
 
 def BCE_loss(predictions,masks):
