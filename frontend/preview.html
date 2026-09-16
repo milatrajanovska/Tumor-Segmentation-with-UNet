@@ -1,0 +1,408 @@
+<!--<!DOCTYPE html>-->
+<!--<html lang="en">-->
+<!--<head>-->
+<!--    <meta charset="UTF-8">-->
+<!--    <title>Title</title>-->
+<!--  <style>-->
+<!--    #logo_picture{-->
+<!--      display:inline-block;-->
+<!--      width:110px;-->
+<!--      height:100px;-->
+<!--    }-->
+<!--    #naslov{-->
+<!--      display:inline-block;-->
+
+<!--    }-->
+<!--    header{-->
+<!--      display: flex;-->
+<!--      align-items:center ;-->
+<!--      background: #071b37;-->
+<!--      color:white;-->
+<!--    ;-->
+<!--    }-->
+<!--    #separate{-->
+<!--      width:100%;-->
+<!--      max-width:740px;-->
+<!--      height:2px;-->
+<!--      background: linear-gradient(90deg, transparent, #1d426c 20%, #1c3555 80%, transparent);-->
+<!--      margin: 32px 0 0;-->
+<!--    }-->
+<!--    #content{-->
+<!--      display:grid;-->
+<!--    }-->
+<!--    #statistics{-->
+<!--      display: inline-block;-->
+<!--    }-->
+<!--  </style>-->
+<!--</head>-->
+<!--<body>-->
+<!--<header>-->
+<!--  <img id="logo_picture" src="brain logo.png">-->
+<!--  <div id="naslov">-->
+<!--    <h1 id="title"style="margin: 0px;">Brain MRI Segmentation</h1>-->
+<!--    <p id="explanation"style="margin: 0px;color:#a3b9d1">Detects and visualize brain tumors using deep learning</p>-->
+<!--  </div>-->
+<!--</header>-->
+<!--<div id="content">-->
+<!--<div id="pictures">-->
+
+<!--</div>-->
+<!--<div id="statistics">-->
+<!--  <h3>Segmentation results</h3>-->
+<!--  <p class="seperator"></p>-->
+<!--  <table id="general_info">-->
+<!--    <tr>-->
+<!--      <th>Model:</th>-->
+<!--      <th>UNet</th>-->
+<!--    </tr>-->
+<!--    <tr>-->
+<!--      <th>Modality:</th>-->
+<!--      <th>FLAIR</th>-->
+<!--    </tr>-->
+<!--    <tr>-->
+<!--      <th>Image:</th>-->
+<!--      <th id="image"></th>-->
+<!--    </tr>-->
+<!--    <tr>-->
+<!--      <th>Slice:</th>-->
+<!--      <th id="slice"></th>-->
+<!--    </tr>-->
+<!--  </table>-->
+<!--  <p class="seperator"></p>-->
+<!--  <div style="display: flex; align-items: center;">-->
+<!--    <h3>Tumor detected</h3>-->
+<!--    <p id="detected_tumor"></p>-->
+<!--  </div>-->
+<!--  <table id="tumor_info">-->
+<!--    <tr>-->
+<!--      <th>Tumor area</th>-->
+<!--      <th></th>-->
+<!--    </tr>-->
+<!--  </table>-->
+<!--  <button id="new_image">New Image</button>-->
+<!--</div>-->
+<!--</div>-->
+<!--</body>-->
+<!--</html>-->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Brain MRI Segmentation</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-color: #060e1e;
+      color: #ffffff;
+      font-family: 'Inter', sans-serif;
+      padding: 20px 40px;
+    }
+
+    /* HEADER SECTION */
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-bottom: 20px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      margin-bottom: 24px;
+    }
+
+    .header-left {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+    }
+
+    #logo_picture {
+      width: 45px;
+      height: 45px;
+      object-fit: contain;
+    }
+
+    #title {
+      font-size: 20px;
+      font-weight: 600;
+      color: #ffffff;
+    }
+
+    #explanation {
+      font-size: 13px;
+      color: #6b7c96;
+      margin-top: 2px;
+    }
+
+    .header-nav a {
+      color: #a3b9d1;
+      text-decoration: none;
+      margin-left: 20px;
+      font-size: 14px;
+      transition: color 0.2s;
+    }
+
+    .header-nav a:hover {
+      color: #ffffff;
+    }
+
+    /* MAIN CONTENT LAYOUT */
+    #content {
+      display: grid;
+      grid-template-columns: 1fr 320px; /* Левиот дел е флексибилен, десниот е со фиксна ширина */
+      gap: 24px;
+      align-items: start;
+      margin-top: 7%;
+    }
+
+    /* LEFT PANEL: Dynamic Pictures Placeholder */
+    #pictures {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 16px;
+      background: #0b172a;
+      border: 1px solid #162a45;
+      border-radius: 12px;
+      padding: 20px;
+      min-height: 400px; /* Остави простор за сликите */
+    }
+    #pictures img{
+      width: 100%;
+      height: 100%;
+    }
+
+    /* RIGHT PANEL: Statistics Side Panel */
+    #statistics {
+      background: #0b172a;
+      border: 1px solid #162a45;
+      border-radius: 12px;
+      padding: 24px 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .panel-header {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 16px;
+      font-weight: 600;
+      color: #ffffff;
+    }
+
+    .panel-header svg {
+      width: 18px;
+      height: 18px;
+      fill: none;
+      stroke: #2b72fb;
+      stroke-width: 2;
+    }
+
+    .separator {
+      height: 1px;
+      background-color: #162a45;
+      width: 100%;
+      margin: 4px 0;
+    }
+
+    /* TABLES */
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    th, td {
+      text-align: left;
+      padding: 6px 0;
+      font-size: 14px;
+      font-weight: 400;
+    }
+
+    th {
+      color: #6b7c96;
+      width: 45%;
+    }
+
+    td {
+      color: #ffffff;
+      font-weight: 500;
+    }
+
+    /* TUMOR DETECTED BADGE */
+    .detected-container {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin: 6px 0;
+    }
+
+    .detected-label {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 14px;
+      font-weight: 500;
+    }
+
+    .detected-icon {
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      border: 1.5px solid #10b981;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #10b981;
+      font-size: 10px;
+    }
+
+    #detected_tumor {
+      background: rgba(16, 185, 129, 0.15);
+      color: #10b981;
+      border: 1px solid #10b981;
+      padding: 3px 12px;
+      border-radius: 12px;
+      font-size: 12px;
+      font-weight: 700;
+      text-transform: uppercase;
+    }
+
+    .sub-text {
+      font-size: 11px;
+      color: #485b73;
+      margin-top: -8px;
+    }
+
+    /* BUTTONS */
+    .btn-action {
+      width: 100%;
+      padding: 10px;
+      border-radius: 8px;
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      transition: all 0.2s ease;
+    }
+
+    #download_mask {
+      background: transparent;
+      border: 1px solid #2b72fb;
+      color: #ffffff;
+      margin-top: 8px;
+    }
+
+    #download_mask:hover {
+      background: rgba(43, 114, 251, 0.1);
+    }
+
+    #new_image {
+      background: #2b72fb;
+      border: none;
+      color: #ffffff;
+    }
+
+    #new_image:hover {
+      background: #1a61eb;
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="header-left">
+    <img id="logo_picture" src="../brain%20logo.png" alt="Logo">
+    <div id="naslov">
+      <h1 id="title">Brain MRI Segmentation</h1>
+      <p id="explanation">Detects and visualize brain tumors using deep learning</p>
+    </div>
+  </div>
+
+</header>
+
+<div id="content">
+  <!-- ЛЕВ ДЕЛ: Твојот простор за динамички слики -->
+  <div id="pictures">
+    <div id="flair">
+
+    </div>
+    <div id="mask">
+
+    </div>
+    <div id="combination">
+
+    </div>
+    <!-- Твојот JS тука ќе ги инјектира картичките со слики -->
+  </div>
+
+  <!-- ДЕСЕН ДЕЛ: Статистика -->
+  <div id="statistics">
+    <div class="panel-header">
+      <svg viewBox="0 0 24 24"><path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+      Segmentation Results
+    </div>
+
+    <div class="separator"></div>
+
+    <table id="general_info">
+      <tr>
+        <th>Model:</th>
+        <td>U-Net</td>
+      </tr>
+      <tr>
+        <th>Modality:</th>
+        <td>FLAIR</td>
+      </tr>
+      <tr>
+        <th>Image:</th>
+        <td id="image"></td>
+      </tr>
+      <tr>
+        <th>Slice:</th>
+        <td id="slice"></td>
+      </tr>
+    </table>
+
+    <div class="separator"></div>
+
+    <div class="detected-container">
+      <div class="detected-label">
+        <span class="detected-icon">✓</span>
+        Tumor detected:
+      </div>
+      <span id="detected_tumor"></span>
+    </div>
+
+    <table id="tumor_info">
+      <tr>
+        <th>Tumor area:</th>
+        <td id="tumor_area"></td>
+      </tr>
+
+    </table>
+
+
+
+
+    <button class="btn-action" id="new_image">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 4v6h-6"/><path d="M1 20v-6h6"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg>
+      New Image
+    </button>
+  </div>
+</div>
+<script src="main.js"></script>
+</body>
+</html>

@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+        :root{
+            --bg: #0a1420;
+            --panel: #101f33;
+            --panel-line: #1d3350;
+            --line: #17263d;
+            --text: #eef3f9;
+            --text-dim: #7c93b3;
+            --text-faint: #47607f;
+            --accent: #4fd8c4;
+            --accent-dim: #245e56;
+            --pending: #223752;
+        }
+        body{
+            background: #071b37;
+            color: white;
+            font-family: 'Inter', sans-serif;
+
+        }
+        #logo_picture{
+            display:inline-block;
+            width:110px;
+            height:100px;
+        }
+        #naslov{
+            display:inline-block;
+
+        }
+        header{
+            display: flex;
+            align-items:center ;
+            background: #071b37;
+            color:white;
+        ;
+        }
+        #separate{
+            width:100%;
+            max-width:740px;
+            height:2px;
+            background: linear-gradient(90deg, transparent, #1d426c 20%, #1c3555 80%, transparent);
+            margin: 32px 0 0;
+        }
+        li{
+            display: flex;
+            align-items: flex-start;
+            gap: 16px;
+            padding: 16px 4px;
+            border-bottom: 1px solid var(--line);
+        }
+       ul{
+           list-style: none;
+           margin: 0;
+           margin-left:38%;
+           padding: 0;
+           width: 100%;
+       }
+
+        /*.loader {*/
+        /*    width: 80px;*/
+        /*    height: 80px;*/
+        /*    border: 4px solid #e0e0e0;        !* track *!*/
+        /*    border-top-color: #635BFF;        !* arc *!*/
+        /*    border-radius: 50%;*/
+        /*    animation: spin 0.9s linear infinite;*/
+        /*    margin: auto;*/
+        /*    margin-bottom: 40px;*/
+        /*}*/
+
+        /*@keyframes spin {*/
+        /*    to { transform: rotate(360deg); }*/
+        /*}*/
+
+        .scan-wrap{
+            position: relative;
+            width: 180px;
+            height: 180px;
+            margin:auto;
+            margin-bottom: 40px;
+        }
+
+        .scan-ring{
+            position: absolute;
+            inset: 0;
+            border-radius: 50%;
+        }
+
+        .scan-ring svg{ width: 100%; height: 100%; transform: rotate(-90deg); }
+
+        .scan-ring circle{
+            fill: none;
+            stroke-width: 2;
+        }
+        .scan-ring .track{ stroke: var(--panel-line); }
+        .scan-ring .progress{
+            stroke: var(--accent);
+            stroke-linecap: round;
+            stroke-dasharray: 452;
+            stroke-dashoffset: 452;
+            animation: ring 10s cubic-bezier(.45,0,.2,1) infinite;
+        }
+
+        @keyframes ring{
+            0%{ stroke-dashoffset: 452; }
+            92%{ stroke-dashoffset: 20; }
+            100%{ stroke-dashoffset: 20; }
+        }
+
+        .brain-holder{
+            position: absolute;
+            inset: 22px;
+            border-radius: 50%;
+            background: var(--panel);
+            border: 1px solid var(--panel-line);
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .brain-holder svg{ width: 68%; height: 68%; }
+        .brain-outline{
+            fill: none;
+            stroke: var(--text-faint);
+            stroke-width: 1.6;
+        }
+
+        .scan-line{
+            position: absolute;
+            left: 8%;
+            right: 8%;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, var(--accent), transparent);
+            box-shadow: 0 0 12px 1px var(--accent);
+            animation: sweep 2.6s ease-in-out infinite;
+        }
+
+        @keyframes sweep{
+            0%, 100%{ top: 18%; opacity: 0; }
+            8%{ opacity: 1; }
+            50%{ top: 82%; opacity: 1; }
+            92%{ opacity: 0; }
+        }
+
+        .readout{
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 11px;
+            color: var(--text-faint);
+            letter-spacing: 0.02em;
+            margin-bottom: 6px;
+        }
+
+        h1{
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 21px;
+            font-weight: 600;
+            margin: 0 0 44px;
+            text-align: center;
+        }
+    </style>
+
+</head>
+<body>
+<header>
+    <img id="logo_picture" src="../brain%20logo.png">
+    <div id="naslov">
+        <h1 id="title"style="margin: 0px;">Brain MRI Segmentation</h1>
+        <p id="explanation"style="margin: 0px;color:#a3b9d1">Detects and visualize brain tumors using deep learning</p>
+    </div>
+
+
+</header>
+<div id="container">
+    <div class="scan-wrap">
+        <div class="scan-ring">
+            <svg viewBox="0 0 160 160">
+                <circle class="track" cx="80" cy="80" r="72"/>
+                <circle class="progress" cx="80" cy="80" r="72"/>
+            </svg>
+        </div>
+        <div class="brain-holder">
+            <svg viewBox="0 0 100 100">
+                <path class="brain-outline" d="M50 15c-11 0-19 6-21 15-7 2-11 9-9 16-4 4-5 11-1 16 1 9 9 15 18 14 3 4 8 6 13 6s10-2 13-6c9 1 17-5 18-14 4-5 3-12-1-16 2-7-2-14-9-16-2-9-10-15-21-15Z"/>
+                <path class="brain-outline" d="M50 15v58M35 30c3 3 3 8 0 12M65 30c-3 3-3 8 0 12M30 46c4 2 9 1 12-2M70 46c-4 2-9 1-12-2M32 62c4-1 7-4 8-8M68 62c-4-1-7-4-8-8" stroke-width="1.1"/>
+            </svg>
+            <div class="scan-line"></div>
+        </div>
+    </div>
+    <h1>Processing your MRI...</h1>
+    <ul>
+        <li id="load_file">
+            <svg id="circle_load_file" width="20" height="20">
+                <circle cx="10" cy="10" r="8" stroke="white" stroke-width="2" fill="none" />
+            </svg> Loading NII file
+        </li>
+        <li id="preprocessing">
+            <svg id="circle_preprocessing" width="20" height="20">
+                <circle cx="10" cy="10" r="8" stroke="white" stroke-width="2" fill="none" />
+            </svg> Preprocessing (normalization, resize)
+        </li>
+        <li id="running_UNet">
+            <svg id="circle_running_UNet" width="20" height="20">
+                <circle cx="10" cy="10" r="8" stroke="white" stroke-width="2" fill="none" />
+            </svg> Running U-Net model
+        </li>
+        <li id="generating_segmentation">
+            <svg id="circle_generating_segmentation" width="20" height="20">
+                <circle cx="10" cy="10" r="8" stroke="white" stroke-width="2" fill="none" />
+            </svg> Generating segmentation
+        </li>
+    </ul>
+</div>
+<script src="main.js"></script>
+
+</body>
+</html>
